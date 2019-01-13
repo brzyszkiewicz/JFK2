@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Controller">
+  <children>
+    <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+        <AnchorPane>
+          <children>
+            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Master" textAlignment="CENTER" wrapText="false">
+              <font>
+                <Font size="18.0" fx:id="x1" />
+              </font>
+              <textFill>
+                <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
+              </textFill>
+            </Label>
+                  <TreeView fx:id="tree" layoutX="11.0" layoutY="74.0" onMouseClicked="#cellSelected" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+          </children>
+        </AnchorPane>
+        <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
+          <content>
+            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
+                     <children>
+                        <ComboBox fx:id="select" layoutX="14.0" layoutY="14.0" prefWidth="150.0" />
+                        <ListView fx:id="attributes" layoutX="14.0" layoutY="49.0" prefHeight="204.0" prefWidth="416.0" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
+                        <TextArea fx:id="code" layoutX="3.0" layoutY="271.0" prefHeight="274.0" prefWidth="430.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="271.0" />
+                        <Label layoutX="14.0" layoutY="256.0" text="Insert your code here" />
+                     </children>
+            </AnchorPane>
+          </content>
+        </ScrollPane>
+        <AnchorPane>
+          <children>
+            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Edit" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                  <Button layoutX="15.0" layoutY="41.0" mnemonicParsing="false" onAction="#openJar" prefHeight="22.0" prefWidth="192.0" text="Select JAR" />
+                  <Label layoutX="31.0" layoutY="93.0" text="Add" />
+                  <Label layoutX="153.0" layoutY="93.0" text="Delete" />
+                  <Button layoutX="1.0" layoutY="128.0" mnemonicParsing="false" onAction="#addPackage" prefHeight="25.0" prefWidth="94.0" text="Package" />
+                  <Button layoutX="126.0" layoutY="128.0" mnemonicParsing="false" onAction="#deletePackage" prefHeight="25.0" prefWidth="94.0" text="Package" />
+                  <Button layoutX="-1.0" layoutY="172.0" mnemonicParsing="false" onAction="#addClass" text="Class/Interface" />
+                  <Button layoutX="126.0" layoutY="172.0" mnemonicParsing="false" onAction="#deleteClass" text="Class/Interface" />
+                  <Button layoutY="218.0" mnemonicParsing="false" onAction="#addMethod" prefHeight="25.0" prefWidth="94.0" text="Method" />
+                  <Button layoutX="126.0" layoutY="218.0" mnemonicParsing="false" onAction="#deleteMethod" prefHeight="25.0" prefWidth="94.0" text="Method" />
+                  <Label layoutX="85.0" layoutY="343.0" text="Overwrite" />
+                  <Button layoutY="263.0" mnemonicParsing="false" onAction="#addField" prefHeight="25.0" prefWidth="94.0" text="Field" />
+                  <Button layoutX="126.0" layoutY="263.0" mnemonicParsing="false" onAction="#deleteField" prefHeight="25.0" prefWidth="94.0" text="Field" />
+                  <Button layoutX="7.0" layoutY="305.0" mnemonicParsing="false" onAction="#addConstructor" text="Constructor" />
+                  <Button layoutX="126.0" layoutY="305.0" mnemonicParsing="false" onAction="#deleteConstructor" prefHeight="25.0" prefWidth="94.0" text="Constructor" />
+                  <Button layoutX="72.0" layoutY="371.0" mnemonicParsing="false" onAction="#overwriteConstructor" text="Constructor" />
+                  <Button layoutX="73.0" layoutY="409.0" mnemonicParsing="false" onAction="#overwriteMethod" prefHeight="25.0" prefWidth="79.0" text="Method" />
+                  <Button layoutX="14.0" layoutY="477.0" mnemonicParsing="false" onAction="#insertBeginning" text="Beginning" />
+                  <Button layoutX="142.0" layoutY="477.0" mnemonicParsing="false" onAction="#insertEnd" prefHeight="25.0" prefWidth="63.0" text="End" />
+                  <Label layoutX="43.0" layoutY="451.0" text="Insert code in the method" />
+                  <Button layoutX="90.0" layoutY="512.0" mnemonicParsing="false" onAction="#save" text="SAVE" />
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+      <children>
+        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
+          <font>
+            <Font size="11.0" fx:id="x3" />
+          </font>
+          <textFill>
+            <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
+          </textFill>
+        </Label>
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Label font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4" HBox.hgrow="NEVER" />
+      </children>
+      <padding>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+      </padding>
+    </HBox>
+  </children>
+</VBox>
