@@ -1,6 +1,7 @@
 package controllers;
 import jarOperations.JarModifier;
 import jarOperations.JarOpener;
+import jarOperations.JarSaver;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,6 +16,7 @@ import javassist.NotFoundException;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.acl.NotOwnerException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +47,7 @@ public class Controller {
     @FXML
     private Color x4;
 
-    private static String path;
+    public static String path;
 
     @FXML
     void cellSelected(MouseEvent event){
@@ -57,19 +59,21 @@ public class Controller {
     @FXML
     void addClass(ActionEvent event) {
         StringBuilder str = resolvePackage();
-        String codeText = code.getText();
-        str.append(".");
-        str.append(codeText);
-        String packagePath = str.toString();
-        packagePath = packagePath.substring(1);
-        try{
-            JarModifier.addClass(path,packagePath);
-        }catch (CannotCompileException e){
-            showError("Cannot compile");
-        } catch (IOException ex) {
-            showError("IO problem");
-        }
-        setTree();
+        if(!str.toString().isEmpty()) {
+            String codeText = code.getText();
+            str.append(".");
+            str.append(codeText);
+            String packagePath = str.toString();
+            packagePath = packagePath.substring(1);
+            try {
+                JarModifier.addClass(path, packagePath);
+            } catch (CannotCompileException e) {
+                showError("Cannot compile");
+            } catch (IOException ex) {
+                showError("IO problem");
+            }
+            setTree();
+        } else showError("Not allowed");
 
     }
 
@@ -123,24 +127,38 @@ public class Controller {
 
     @FXML
     void addPackage(ActionEvent event) {
-
+        System.out.print(" ");
     }
 
     @FXML
     void deleteClass(ActionEvent event) {
+        String classpath = resolvePath();
+        if(!classpath.isEmpty()) {
+            if (classpath.contains(".class")) {
+                classpath = classpath.substring(1, classpath.length() - 6);
+                try {
+                    JarModifier.deleteClass(path, classpath);
+                } catch (NotOwnerException e) {
+                    showError("Not allowed");
+                }
+            } else showError("Not allowed");
+            setTree();
+        } else showError("Not allowed");
     }
 
     @FXML
     void deleteConstructor(ActionEvent event) {
         String classpath = resolvePath();
-        if (classpath.contains(".class")) {
-            classpath = classpath.substring(1, classpath.length() - 6);
-            if (select.getValue().equals("Constructors") && !attributes.getSelectionModel().isEmpty()) {
-                String name = attributes.getSelectionModel().getSelectedItem();
-                JarModifier.deleteConstructor(path, classpath, name);
-                fillList();
-            } else showError("Not allowed");
-        }
+        if(!classpath.isEmpty()) {
+            if (classpath.contains(".class")) {
+                classpath = classpath.substring(1, classpath.length() - 6);
+                if (select.getValue().equals("Constructors") && !attributes.getSelectionModel().isEmpty()) {
+                    String name = attributes.getSelectionModel().getSelectedItem();
+                    JarModifier.deleteConstructor(path, classpath, name);
+                    fillList();
+                } else showError("Not allowed");
+            }
+        } else showError("Not Allowed");
     }
 
     @FXML
@@ -172,7 +190,7 @@ public class Controller {
 
     @FXML
     void deletePackage(ActionEvent event) {
-
+        System.out.print("");
     }
 
     @FXML
@@ -219,6 +237,7 @@ public class Controller {
         File jarFile = fileChooser.showOpenDialog(null);
         if(jarFile != null){
             path = jarFile.getAbsolutePath();
+            System.out.println(path.substring(0,path.lastIndexOf('\\')));
         } else {
             System.out.println("Error occured");
             return;
@@ -268,6 +287,11 @@ public class Controller {
 
     @FXML
     void save(ActionEvent event) {
+        try{
+            JarSaver.saveFile(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private TreeItem<String> createTreeView(TreeItem<String> parent, String value) {
@@ -286,6 +310,7 @@ public class Controller {
         List<String> paths;
         try {
             paths = JarOpener.getClasses(path);
+            System.out.println(paths);
             TreeItem<String> root = new TreeItem<>("JAR");
             tree.setRoot(root);
             for (String path : paths) {
@@ -347,7 +372,7 @@ public class Controller {
 
     }
 
-    public void showError(String txt){
+    public static void showError(String txt){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error Dialog");
         alert.setContentText(txt);

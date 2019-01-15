@@ -3,12 +3,14 @@ package jarOperations;
 import javassist.*;
 
 import java.io.IOException;
+import java.io.NotActiveException;
+import java.security.acl.NotOwnerException;
 import java.util.ArrayList;
 
 public class JarModifier {
 
-    private static ArrayList<String> addedClasses = new ArrayList<>();
-    private static ArrayList<String> addedPackages = new ArrayList<>();
+    public static ArrayList<String> addedClasses = new ArrayList<>();
+    public static ArrayList<String> addedPackages = new ArrayList<>();
 
 
     public static void addMethod(String jar, String classpath, String code) throws CannotCompileException {
@@ -119,7 +121,7 @@ public class JarModifier {
             cp.insertClassPath(jar);
             CtClass randomClass = cp.getCtClass(classpath);
             CtMethod ctMethodTest = randomClass.getDeclaredMethod(name);
-            ctMethodTest.insertAfter(code);
+            ctMethodTest.insertBefore(code);
         } catch (NotFoundException e){
             e.printStackTrace();
         }
@@ -131,7 +133,6 @@ public class JarModifier {
             ClassPool cp = ClassPool.getDefault();
             cp.insertClassPath(path);
             CtClass classNew = cp.makeClass(newClass);
-            classNew.writeFile();
             addedClasses.add(classNew.getName());
 
         } catch (NotFoundException e){
@@ -151,14 +152,15 @@ public class JarModifier {
         }
     }
 
-    public static void deleteClass(String path, String classPath, String packagePath, String name){
+    public static void deleteClass(String path, String packagePath) throws NotOwnerException{
         try {
             ClassPool cp = ClassPool.getDefault();
             cp.insertClassPath(path);
-            if(addedClasses.contains(name)){
-                CtClass klasa = cp.getCtClass(name);
+            if(addedClasses.contains(packagePath)){
+                CtClass klasa = cp.getCtClass(packagePath);
                 klasa.detach();
-            }
+                addedClasses.remove(packagePath);
+            } else throw new NotOwnerException();
         } catch (NotFoundException e){
             e.printStackTrace();
         }

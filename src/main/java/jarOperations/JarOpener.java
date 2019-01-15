@@ -52,6 +52,9 @@ public class JarOpener {
                 names.add(name);
             }
         }
+        for (String clas: JarModifier.addedClasses) {
+            names.add(clas.replace('.','/') + ".class");
+        }
         return names;
 
     }
