@@ -1,30 +1,167 @@
 package jarOperations;
 
+import javassist.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class JarModifier {
 
-    public void addMethod(){
+    private static ArrayList<String> addedClasses = new ArrayList<>();
+    private static ArrayList<String> addedPackages = new ArrayList<>();
+
+
+    public static void addMethod(String jar, String classpath, String code) throws CannotCompileException {
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(jar);
+            CtClass randomClass = cp.getCtClass(classpath);
+            CtMethod ctMethodTest = CtMethod.make(code, randomClass);
+            randomClass.addMethod(ctMethodTest);
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
 
     }
-    public void deleteMethod(){
+    public static void deleteMethod(String jar, String classpath, String name){
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(jar);
+            CtClass randomClass = cp.getCtClass(classpath);
+            CtMethod method = randomClass.getDeclaredMethod(name);
+            System.out.println(method);
+            randomClass.removeMethod(method);
+
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
 
     }
-    public void deleteConstructor(){
+
+    public static void addConstructor(String jar, String classpath, String code) throws CannotCompileException{
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(jar);
+            CtClass randomClass = cp.getCtClass(classpath);
+            CtConstructor constructor = CtNewConstructor.make(code,randomClass);
+            randomClass.addConstructor(constructor);
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
+
 
     }
-    public void deleteField(){
+    public static void deleteConstructor(String jar, String classpath, String signature){
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(jar);
+            CtClass randomClass = cp.getCtClass(classpath);
+            CtConstructor toDelete = randomClass.getConstructor(signature);
+            randomClass.removeConstructor(toDelete);
+
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
 
     }
-    public void overwriteMethod(){
+    public static void deleteField(String jar, String classpath, String name){
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(jar);
+            CtClass randomClass = cp.getCtClass(classpath);
+            CtField field = randomClass.getField(name);
+            randomClass.removeField(field);
+
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
+    }
+    public static void overwriteMethod(String jar, String classpath, String code,String name) throws CannotCompileException{
+
+       try {
+           ClassPool cp = ClassPool.getDefault();
+           cp.insertClassPath(jar);
+           CtClass randomClass = cp.getCtClass(classpath);
+           CtMethod method = randomClass.getDeclaredMethod(name);
+           method.setBody(code);
+       } catch (NotFoundException e){
+           e.printStackTrace();
+       }
 
     }
-    public void overwriteConstructor(){
+    public static void overwriteConstructor(String jar, String classpath, String code,String name) throws CannotCompileException{
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(jar);
+            CtClass randomClass = cp.getCtClass(classpath);
+            CtConstructor constructor = randomClass.getConstructor(name);
+            constructor.setBody(code);
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
 
     }
-    public void insertAtTheEnd(){
+    public static void insertAtTheEnd(String jar, String classpath, String code,String name) throws CannotCompileException{
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(jar);
+            CtClass randomClass = cp.getCtClass(classpath);
+            CtMethod ctMethodTest = randomClass.getDeclaredMethod(name);
+            ctMethodTest.insertBefore(code);
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
 
     }
-    public void insertInTheBeginnning(){
+    public static void insertInTheBeginnning(String jar, String classpath, String code,String name) throws CannotCompileException{
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(jar);
+            CtClass randomClass = cp.getCtClass(classpath);
+            CtMethod ctMethodTest = randomClass.getDeclaredMethod(name);
+            ctMethodTest.insertAfter(code);
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
+    }
 
+    public static void addClass(String path, String newClass)throws IOException, CannotCompileException {
+
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(path);
+            CtClass classNew = cp.makeClass(newClass);
+            classNew.writeFile();
+            addedClasses.add(classNew.getName());
+
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void addField(String path, String classPath, String field) throws CannotCompileException{
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(path);
+            CtClass randomClass = cp.getCtClass(classPath);
+            randomClass.addField(CtField.make(field, randomClass));
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteClass(String path, String classPath, String packagePath, String name){
+        try {
+            ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(path);
+            if(addedClasses.contains(name)){
+                CtClass klasa = cp.getCtClass(name);
+                klasa.detach();
+            }
+        } catch (NotFoundException e){
+            e.printStackTrace();
+        }
     }
 
 }

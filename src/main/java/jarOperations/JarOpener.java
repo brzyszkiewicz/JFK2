@@ -24,7 +24,7 @@ public class JarOpener {
         List<CtMethod> metoda = Arrays.asList(randomClass.getDeclaredMethods());
 
         for(CtMethod met:metoda){
-            lsta.add(met.getLongName());
+            lsta.add(met.getName());
         }
 
         System.out.println(metoda);
@@ -84,7 +84,7 @@ public class JarOpener {
         List<CtConstructor> allConstructors = Arrays.asList(randomClass.getDeclaredConstructors());
 
         for (CtConstructor konstruktor: allConstructors) {
-            constructorsString.add(konstruktor.getName());
+            constructorsString.add(konstruktor.getSignature());
         }
         return constructorsString;
 
