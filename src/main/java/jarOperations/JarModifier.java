@@ -3,7 +3,6 @@ package jarOperations;
 import javassist.*;
 
 import java.io.IOException;
-import java.io.NotActiveException;
 import java.security.acl.NotOwnerException;
 import java.util.ArrayList;
 

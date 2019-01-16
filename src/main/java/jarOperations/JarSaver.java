@@ -1,7 +1,6 @@
 package jarOperations;
 
 import controllers.Controller;
-import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
@@ -17,7 +16,7 @@ import java.util.jar.JarFile;
 
 public class JarSaver {
 
-   public static void saveFile(String jarPath) throws IOException, NotFoundException, CannotCompileException {
+   public static void saveFile(String jarPath) throws IOException, NotFoundException {
        ClassPool cp = ClassPool.getDefault();
        cp.insertClassPath(jarPath);
        List<String> names = JarOpener.getClasses(jarPath);
@@ -52,7 +51,7 @@ public class JarSaver {
 
        }
 
-       ProcessBuilder jarBuilder = new ProcessBuilder("cmd.exe","/c cd C:/Users/brzyszkiewicz/Desktop/JFK/newJar && jar cfm newJar.jar META-INF/MANIFEST.MF *");
+       ProcessBuilder jarBuilder = new ProcessBuilder("cmd.exe","/c", "cd "+ destination + "\\newJar" + " && jar cfm newJar.jar META-INF/MANIFEST.MF *");
        jarBuilder.start();
        Controller.showError("Saved!");
 
